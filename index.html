@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산 자랑 노랫말 친구 🌊🎵</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f9ff;
+        }
+        .font-jua {
+            font-family: 'Jua', sans-serif;
+        }
+        /* 커스텀 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bae6fd;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7dd3fc;
+        }
+        /* 말풍선 애니메이션 */
+        @keyframes popIn {
+            0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .msg-animate {
+            animation: popIn 0.25s ease-out forwards;
+        }
+        /* 로딩 점 애니메이션 */
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden text-slate-800 select-none sm:select-auto">
+
+    <!-- 상단 헤더 & 단계 표시기 -->
+    <header class="bg-white border-b border-sky-100 shadow-sm px-4 py-3 flex-shrink-0 z-10">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <!-- 로고 및 제목 -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white text-xl shadow-md">
+                        🌊
+                    </div>
+                    <div>
+                        <h1 class="font-jua text-xl sm:text-2xl text-sky-900 tracking-wide">부산 자랑 노랫말 친구</h1>
+                        <p class="text-xs text-sky-600 hidden sm:block">우리 모둠이 조사한 부산의 자랑으로 멋진 노래를 만들어요!</p>
+                    </div>
+                </div>
+                <button onclick="openResetModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-xl font-medium transition flex items-center gap-1">
+                    <span>🔄</span> 처음부터
+                </button>
+            </div>
+
+            <!-- 6단계 진행 표시바 -->
+            <div class="flex items-center justify-between bg-sky-50/80 p-1.5 rounded-2xl border border-sky-100 overflow-x-auto">
+                <div id="step-1" class="step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold bg-sky-500 text-white shadow-sm whitespace-nowrap transition-all">
+                    <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
+                    <span>분야 고르기</span>
+                </div>
+                <div class="text-sky-300 text-xs px-0.5">›</div>
+                <div id="step-2" class="step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium text-slate-500 whitespace-nowrap transition-all">
+                    <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px]">2</span>
+                    <span>자랑 목록</span>
+                </div>
+                <div class="text-sky-300 text-xs px-0.5">›</div>
+                <div id="step-3" class="step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium text-slate-500 whitespace-nowrap transition-all">
+                    <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px]">3</span>
+                    <span>자세히 알기</span>
+                </div>
+                <div class="text-sky-300 text-xs px-0.5">›</div>
+                <div id="step-4" class="step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium text-slate-500 whitespace-nowrap transition-all">
+                    <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px]">4</span>
+                    <span>알리는 노력</span>
+                </div>
+                <div class="text-sky-300 text-xs px-0.5">›</div>
+                <div id="step-5" class="step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium text-slate-500 whitespace-nowrap transition-all">
+                    <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px]">5</span>
+                    <span>분위기/한마디</span>
+                </div>
+                <div class="text-sky-300 text-xs px-0.5">›</div>
+                <div id="step-6" class="step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium text-slate-500 whitespace-nowrap transition-all">
+                    <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px]">6</span>
+                    <span>노랫말 완성</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 모바일 전용 탭 전환 버튼 -->
+    <div class="md:hidden bg-white border-b border-sky-100 px-4 py-2 flex gap-2 flex-shrink-0">
+        <button id="tab-chat" onclick="switchMobileTab('chat')" class="flex-1 py-2 rounded-xl font-bold text-sm bg-sky-500 text-white shadow-sm transition">
+            💬 친구와 대화하기
+        </button>
+        <button id="tab-lyrics" onclick="switchMobileTab('lyrics')" class="flex-1 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 transition relative">
+            🎵 완성된 노랫말
+            <span id="lyrics-badge" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full border-2 border-white"></span>
+        </button>
+    </div>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-4 flex gap-4 overflow-hidden">
+        
+        <!-- 왼쪽: 채팅 영역 -->
+        <section id="chat-section" class="w-full md:w-3/5 bg-white rounded-3xl shadow-sm border border-sky-100 flex flex-col overflow-hidden">
+            <!-- 채팅 메시지 목록 -->
+            <div id="chat-messages" class="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 bg-gradient-to-b from-sky-50/30 to-white">
+                <!-- 초기 메시지가 JS로 삽입됨 -->
+            </div>
+
+            <!-- 빠른 선택 버튼 영역 (단계별 힌트/선택지) -->
+            <div id="quick-replies" class="px-4 py-2 bg-sky-50/70 border-t border-sky-100 flex flex-wrap gap-2">
+                <!-- JS로 동적 생성 -->
+            </div>
+
+            <!-- 메시지 입력창 -->
+            <form id="chat-form" class="p-3 sm:p-4 bg-white border-t border-slate-100 flex items-center gap-2">
+                <input 
+                    type="text" 
+                    id="user-input" 
+                    placeholder="여기에 대답을 적어 주세요..." 
+                    autocomplete="off"
+                    class="flex-1 bg-slate-100 focus:bg-white border-2 border-transparent focus:border-sky-400 rounded-2xl px-4 py-3 text-sm sm:text-base outline-none transition"
+                >
+                <button 
+                    type="submit" 
+                    id="send-btn"
+                    class="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white font-bold px-5 py-3 rounded-2xl shadow-sm transition flex items-center gap-1.5 flex-shrink-0"
+                >
+                    <span>보내기</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                </button>
+            </form>
+        </section>
+
+        <!-- 오른쪽: 노랫말 노트 영역 -->
+        <section id="lyrics-section" class="hidden md:flex w-full md:w-2/5 bg-amber-50/60 rounded-3xl shadow-sm border-2 border-amber-200/80 flex-col overflow-hidden">
+            <!-- 노트 상단 헤더 -->
+            <div class="bg-amber-100/80 px-5 py-3.5 border-b border-amber-200 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🎼</span>
+                    <h2 class="font-jua text-lg text-amber-900">우리 모둠 노랫말 공책</h2>
+                </div>
+                <button 
+                    id="copy-btn" 
+                    onclick="copyLyrics()" 
+                    disabled
+                    class="bg-amber-500 hover:bg-amber-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5"
+                >
+                    <span>📋</span> 노랫말 복사하기
+                </button>
+            </div>
+
+            <!-- 노랫말 본문 표시 영역 -->
+            <div id="lyrics-container" class="flex-1 p-5 overflow-y-auto flex flex-col">
+                <!-- 빈 상태 안내 -->
+                <div id="lyrics-empty" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-amber-800/70">
+                    <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-4xl mb-4 shadow-inner">
+                        🎤
+                    </div>
+                    <p class="font-jua text-lg text-amber-900 mb-2">아직 노랫말이 만들어지지 않았어요!</p>
+                    <p class="text-sm leading-relaxed">
+                        왼쪽에서 '부산 자랑 노랫말 친구'와<br>
+                        차근차근 대화를 나누면,<br>
+                        이곳에 멋진 노랫말이 나타납니다.
+                    </p>
+                    <div class="mt-6 bg-white/80 rounded-2xl p-4 text-left text-xs text-slate-600 border border-amber-200/60 w-full space-y-1.5">
+                        <p class="font-bold text-amber-800">💡 노랫말 만들기 순서</p>
+                        <p>1. 모둠의 조사 분야 고르기</p>
+                        <p>2. 자랑거리 3~5가지 알려 주기</p>
+                        <p>3. 자랑거리마다 특별한 점 설명하기</p>
+                        <p>4. 부산을 알리는 노력과 전하고 싶은 말</p>
+                    </div>
+                </div>
+
+                <!-- 완성된 노랫말 카드 -->
+                <div id="lyrics-content" class="hidden space-y-4">
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-amber-200/80 relative">
+                        <div class="absolute -top-3 left-4 bg-amber-400 text-amber-950 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                            수노(Suno) AI 바로 넣기용
+                        </div>
+                        <pre id="lyrics-text" class="whitespace-pre-wrap font-sans text-sm sm:text-base leading-relaxed text-slate-800 pt-2 select-all"></pre>
+                    </div>
+                    
+                    <div class="bg-sky-50 rounded-2xl p-4 border border-sky-200 text-xs text-sky-900 space-y-1.5">
+                        <p class="font-bold flex items-center gap-1"><span>🎧</span> 노래 만드는 방법</p>
+                        <p>1. 위의 <span class="font-bold underline">노랫말 복사하기</span> 버튼을 눌러요.</p>
+                        <p>2. 수노(Suno) AI 사이트에 들어가서 가사 칸에 붙여 넣어요.</p>
+                        <p>3. 맨 아래에 적힌 영어 스타일을 스타일 칸에 넣으면 노래 완성!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 알림 토스트 메시지 -->
+    <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm font-medium px-5 py-3 rounded-2xl shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-center gap-2">
+        <span id="toast-icon">✅</span>
+        <span id="toast-msg">복사되었습니다!</span>
+    </div>
+
+    <!-- 초기화 확인 모달 (alert/confirm 대체) -->
+    <div id="reset-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-xl border border-slate-100 text-center space-y-4">
+            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto">
+                🤔
+            </div>
+            <h3 class="font-jua text-xl text-slate-800">처음부터 다시 시작할까요?</h3>
+            <p class="text-sm text-slate-600">지금까지 나눈 대화와 노랫말이 모두 지워집니다.</p>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeResetModal()" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition">
+                    취소
+                </button>
+                <button onclick="resetApp()" class="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm transition">
+                    다시 시작
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 시스템 프롬프트 (사용자가 제공한 역할 및 규칙)
+        const SYSTEM_INSTRUCTION = `# 역할
+너는 초등학교 4학년 학생들과 대화하면서 '부산의 자랑거리'를 알리는 노랫말을 만드는 작사 도우미 "부산 자랑 노랫말 친구"야. 학생들이 조사한 내용을 짧은 질문으로 끌어내고, 그 내용으로 노랫말을 만드는 것이 너의 역할이야.
+
+# 진행 순서
+한 번에 질문을 하나씩만 해. 학생이 대답하면 짧게 칭찬하거나 반응한 뒤 다음 질문으로 넘어가. 학생이 한 번에 여러 가지를 대답해도 좋아.
+
+[1단계] 분야 고르기
+반갑게 인사하고 모둠이 맡은 분야를 고르게 해.
+① 자연환경 ② 역사 ③ 문화 ④ 생산물
+학생이 헷갈려하면 네 분야의 뜻을 쉽게 설명해 줘.
+- 자연환경: 산, 바다, 강, 섬처럼 자연이 만든 것
+- 역사: 옛날에 있었던 일, 옛날 사람들이 남긴 장소나 물건
+- 문화: 축제, 행사, 음식, 예술처럼 사람들이 함께 즐기고 누리는 것
+- 생산물: 그 지역에서 많이 나거나 만드는 물건과 먹을거리
+
+[2단계] 자랑거리 목록 받기
+그 분야에서 조사한 부산의 자랑거리를 3~5가지 알려 달라고 해. 5가지보다 많으면 노랫말에 넣을 5가지를 모둠에서 골라 달라고 해.
+2가지 이하라면 "노랫말을 풍성하게 만들려면 자랑거리가 3가지 이상 있으면 좋아요. 더 조사해 볼까요?"라고 안내해.
+학생이 말한 자랑거리가 고른 분야와 맞지 않아 보이면 "이 자랑거리는 ○○ 분야에 더 가까울 수도 있어요. 모둠에서 한 번 이야기해 볼까요?"라고 물어봐. 네가 마음대로 바꾸지 마.
+
+[3단계] 자랑거리 하나씩 알아보기
+자랑거리 하나에 질문은 1개만 하고, 대답이 부족할 때만 보충 질문을 1개 더 해. 자랑거리 하나에 질문이 2개를 넘으면 안 돼.
+
+기본 질문 (분야에 맞게 하나를 골라 물어봐)
+- 자연환경: "○○은 어떤 모습이고, 무엇이 특별한가요?"
+- 역사: "○○에서는 옛날에 어떤 일이 있었고, 지금은 어떻게 남아 있나요?"
+- 문화: "○○에서는 무엇을 보고, 듣고, 먹고, 할 수 있나요?"
+- 생산물: "○○은 무엇이고, 왜 부산에서 많이 나거나 만들어지나요?"
+
+보충 질문 (대답이 한두 낱말로 너무 짧거나, 특별한 점이 빠졌을 때만)
+- "조금 더 자세히 말해 줄 수 있나요? 예를 들어 색깔, 모양, 하는 일, 느낌 같은 것도 좋아요."
+
+학생이 "모르겠어요"라고 하면 답을 알려 주지 말고 "이 부분은 조사 자료에서 찾아보고 나중에 알려 주세요."라고 말한 뒤 다음 자랑거리로 넘어가.
+하나가 끝나면 "좋아요! 이제 ○○에 대해 알아볼게요."라고 말하고 바로 다음 자랑거리로 넘어가.
+
+[4단계] 부산을 알리는 노력
+모든 자랑거리를 알아본 뒤 "부산은 이 자랑거리들을 알리기 위해 어떤 노력을 하고 있나요? (예: 축제, 행사, 관광 안내, 누리집 홍보)"라고 물어봐.
+
+[5단계] 노래 분위기 정하기
+"노래 분위기(신나는 / 잔잔한 / 웅장한 / 귀여운)와 듣는 사람에게 전하고 싶은 한마디를 함께 알려 주세요."라고 한 번에 물어봐.
+
+[6단계] 노랫말 만들기
+아래 [노랫말 형식]에 맞춰 노랫말을 만들어.
+후렴은 두 가지 버전을 보여 주고 학생들이 고르게 해.
+노랫말을 보여 준 뒤 "바꾸고 싶은 부분이 있나요?"라고 묻고, 학생이 고쳐 달라는 부분만 고쳐.
+
+# 노랫말 형식
+수노(Suno) AI에 바로 넣을 수 있게 아래 형식으로 써.
+
+[Verse 1]
+(4~6줄: 자랑거리 1, 2를 하나에 2~3줄씩 구체적으로)
+
+[Chorus]
+(4줄: '부산'과 분야 이름이 들어가고, 모든 자랑거리를 아우르는 내용, 따라 부르기 쉽게 반복되는 말 넣기)
+
+[Verse 2]
+(4~8줄: 나머지 자랑거리 3, 4, 5를 하나에 2~3줄씩 구체적으로. 자랑거리가 3가지면 3만, 4가지면 3, 4만)
+
+[Chorus]
+
+[Bridge]
+(2~4줄: 부산을 알리는 노력과 학생들이 전하고 싶은 한마디)
+
+[Chorus]
+
+- 각 자랑거리마다 이름을 넣고, 학생이 말한 특별한 점을 한 가지 이상 노랫말에 담아.
+- 노랫말 아래에 노래 제목을 지어 주고, 수노에 넣을 노래 스타일을 영어로 한 줄 추천해 줘. (예: upbeat K-pop, children's song, bright)
+
+# 꼭 지킬 규칙
+- 노랫말에는 학생이 말해 준 내용만 사실처럼 써. 학생이 말하지 않은 숫자, 연도, 이름, 사실은 지어내지 마.
+- 부산의 자랑거리에 대한 정보를 네가 먼저 알려 주지 마. 더 넣으면 좋을 내용이 떠오르면 "이런 내용도 조사해 보면 좋겠어요."라고 힌트만 줘.
+- 학생이 말한 내용이 사실과 다를 수 있어 보이면 고치지 말고 "이 내용은 자료에서 한 번 더 확인해 볼까요?"라고 말해.
+- 초등학교 4학년이 이해하고 따라 부를 수 있는 쉬운 우리말을 써. 어려운 낱말이나 외국어는 쓰지 마.
+- 다른 지역을 깎아내리거나 비교하는 표현은 쓰지 마.
+- 이름, 학교, 사는 곳 같은 개인 정보는 묻지도 쓰지도 마.
+- 말투는 친절하고 짧게, 존댓말로 해.
+
+# 화면 표시 규칙 (앱용)
+- 굵은 글씨(**), 제목(#) 같은 마크다운 기호는 쓰지 마. 평범한 글로만 써.
+- 노랫말을 보여 줄 때는 노랫말 전체(제목과 스타일 추천 포함)를 <<<가사 와 가사>>> 사이에 넣어. 후렴 두 버전은 가사 블록 밖에서 "후렴 A", "후렴 B"로 보여 줘도 되고, 학생이 고른 뒤 완성본을 다시 블록에 넣어.
+- 모든 대답의 맨 끝 줄에 지금 진행 중인 단계를 [[단계:숫자]] 형식으로 붙여. (예: [[단계:3]]) 이 줄은 학생에게 보이지 않아.`;
+
+        // 초기 인사 메시지
+        const INITIAL_GREETING = `안녕! 나는 여러분과 함께 멋진 노래를 만들 '부산 자랑 노랫말 친구'야. 반가워요!\n\n우리 모둠이 조사한 부산의 자랑거리는 어떤 분야인가요? 아래 네 가지 중에서 골라 주세요.\n\n① 자연환경\n② 역사\n③ 문화\n④ 생산물\n\n[[단계:1]]`;
+
+        // 상태 변수
+        let chatHistory = [];
+        let currentStep = 1;
+        let isWaiting = false;
+        let currentLyrics = "";
+
+        // DOM 요소
+        const chatMessagesEl = document.getElementById('chat-messages');
+        const quickRepliesEl = document.getElementById('quick-replies');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const lyricsEmptyEl = document.getElementById('lyrics-empty');
+        const lyricsContentEl = document.getElementById('lyrics-content');
+        const lyricsTextEl = document.getElementById('lyrics-text');
+        const copyBtn = document.getElementById('copy-btn');
+
+        // 앱 초기화
+        function initApp() {
+            chatHistory = [
+                { role: 'model', parts: [{ text: INITIAL_GREETING }] }
+            ];
+            chatMessagesEl.innerHTML = '';
+            currentLyrics = "";
+            updateLyricsPanel("");
+            processAndRenderModelMessage(INITIAL_GREETING);
+        }
+
+        // 단계 UI 업데이트
+        function updateStepUI(step) {
+            currentStep = step;
+            for (let i = 1; i <= 6; i++) {
+                const badge = document.getElementById(`step-${i}`);
+                const numSpan = badge.querySelector('span:first-child');
+                if (i === step) {
+                    badge.className = "step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold bg-sky-500 text-white shadow-sm whitespace-nowrap transition-all";
+                    numSpan.className = "w-4 h-4 rounded-full bg-white/25 text-white flex items-center justify-center text-[10px]";
+                } else if (i < step) {
+                    badge.className = "step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold bg-sky-100 text-sky-700 whitespace-nowrap transition-all";
+                    numSpan.className = "w-4 h-4 rounded-full bg-sky-500 text-white flex items-center justify-center text-[10px]";
+                } else {
+                    badge.className = "step-badge flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium text-slate-500 whitespace-nowrap transition-all";
+                    numSpan.className = "w-4 h-4 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px]";
+                }
+            }
+            updateQuickReplies(step);
+        }
+
+        // 단계별 빠른 선택 버튼 제공
+        function updateQuickReplies(step) {
+            quickRepliesEl.innerHTML = '';
+            let options = [];
+
+            if (step === 1) {
+                options = [
+                    { label: "① 자연환경", text: "① 자연환경 분야예요." },
+                    { label: "② 역사", text: "② 역사 분야예요." },
+                    { label: "③ 문화", text: "③ 문화 분야예요." },
+                    { label: "④ 생산물", text: "④ 생산물 분야예요." },
+                    { label: "❓ 분야 뜻이 헷갈려요", text: "네 분야의 뜻이 헷갈려요. 쉽게 설명해 주세요." }
+                ];
+            } else if (step === 3) {
+                options = [
+                    { label: "🤷‍♂️ 잘 모르겠어요", text: "모르겠어요." }
+                ];
+            } else if (step === 5) {
+                options = [
+                    { label: "🎉 신나는 분위기", text: "신나는 분위기로 하고 싶어요!" },
+                    { label: "🍃 잔잔한 분위기", text: "잔잔한 분위기로 하고 싶어요." },
+                    { label: "🎺 웅장한 분위기", text: "웅장한 분위기로 하고 싶어요!" },
+                    { label: "🐣 귀여운 분위기", text: "귀여운 분위기로 하고 싶어요!" }
+                ];
+            } else if (step === 6) {
+                options = [
+                    { label: "🅰️ 후렴 A가 좋아요", text: "후렴 A로 할게요!" },
+                    { label: "🅱️ 후렴 B가 좋아요", text: "후렴 B로 할게요!" },
+                    { label: "👍 바꿀 부분 없어요, 완성!", text: "바꾸고 싶은 부분 없어요. 정말 멋져요!" }
+                ];
+            }
+
+            if (options.length === 0) {
+                quickRepliesEl.classList.add('hidden');
+                return;
+            }
+
+            quickRepliesEl.classList.remove('hidden');
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = opt.label;
+                btn.className = "text-xs bg-white hover:bg-sky-100 text-sky-800 border border-sky-200 font-medium px-3 py-1.5 rounded-xl shadow-2xs transition active:scale-95";
+                btn.onclick = () => {
+                    userInput.value = opt.text;
+                    handleSendMessage();
+                };
+                quickRepliesEl.appendChild(btn);
+            });
+        }
+
+        // 모델 응답 파싱 및 화면 출력
+        function processAndRenderModelMessage(rawText) {
+            let displayText = rawText;
+
+            // 1. [[단계:숫자]] 추출 및 제거
+            const stepMatch = displayText.match(/\[\[단계:\s*(\d+)\]\]/);
+            if (stepMatch) {
+                const parsedStep = parseInt(stepMatch[1], 10);
+                if (parsedStep >= 1 && parsedStep <= 6) {
+                    updateStepUI(parsedStep);
+                }
+                displayText = displayText.replace(/\[\[단계:\s*\d+\]\]/g, '').trim();
+            }
+
+            // 2. <<<가사 ... 가사>>> 블록 추출
+            const lyricsMatch = displayText.match(/<<<가사([\s\S]*?)가사>>>/);
+            if (lyricsMatch) {
+                const extractedLyrics = lyricsMatch[1].trim();
+                updateLyricsPanel(extractedLyrics);
+                
+                // 채팅창에는 가사 블록 대신 안내 카드 표시
+                displayText = displayText.replace(/<<<가사[\s\S]*?가사>>>/, '\n[🎼 오른쪽 노랫말 공책에 가사가 적혔어요!]\n').trim();
+            }
+
+            // 마크다운 기호 혹시 남아있을 경우 깔끔하게 정리
+            displayText = displayText.replace(/\*\*/g, '');
+
+            appendMessage('model', displayText);
+        }
+
+        // 오른쪽 노랫말 패널 업데이트
+        function updateLyricsPanel(lyrics) {
+            if (!lyrics) {
+                lyricsEmptyEl.classList.remove('hidden');
+                lyricsContentEl.classList.add('hidden');
+                copyBtn.disabled = true;
+                document.getElementById('lyrics-badge').classList.add('hidden');
+                return;
+            }
+
+            currentLyrics = lyrics;
+            lyricsTextEl.textContent = lyrics;
+            lyricsEmptyEl.classList.add('hidden');
+            lyricsContentEl.classList.remove('hidden');
+            copyBtn.disabled = false;
+
+            // 모바일일 경우 배지 표시 및 알림
+            document.getElementById('lyrics-badge').classList.remove('hidden');
+            showToast("🎵 노랫말 공책에 새 가사가 완성되었어요!");
+        }
+
+        // 채팅창에 말풍선 추가
+        function appendMessage(sender, text) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex items-end gap-2.5 msg-animate ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+
+            if (sender === 'model') {
+                const avatar = document.createElement('div');
+                avatar.className = "w-9 h-9 rounded-2xl bg-sky-100 border border-sky-200 flex items-center justify-center text-lg flex-shrink-0 shadow-2xs";
+                avatar.textContent = "🐬";
+                wrapper.appendChild(avatar);
+            }
+
+            const bubble = document.createElement('div');
+            if (sender === 'user') {
+                bubble.className = "max-w-[80%] bg-sky-500 text-white px-4 py-3 rounded-2xl rounded-br-sm text-sm sm:text-base leading-relaxed shadow-sm whitespace-pre-wrap";
+            } else {
+                bubble.className = "max-w-[85%] bg-white border border-slate-200/80 text-slate-800 px-4 py-3 rounded-2xl rounded-bl-sm text-sm sm:text-base leading-relaxed shadow-xs whitespace-pre-wrap";
+            }
+            bubble.textContent = text;
+            wrapper.appendChild(bubble);
+
+            chatMessagesEl.appendChild(wrapper);
+            scrollToBottom();
+        }
+
+        // 로딩 말풍선 추가/제거
+        function showTypingIndicator() {
+            const wrapper = document.createElement('div');
+            wrapper.id = 'typing-indicator';
+            wrapper.className = "flex items-end gap-2.5 msg-animate";
+            wrapper.innerHTML = `
+                <div class="w-9 h-9 rounded-2xl bg-sky-100 border border-sky-200 flex items-center justify-center text-lg flex-shrink-0">🐬</div>
+                <div class="bg-white border border-slate-200/80 px-4 py-3.5 rounded-2xl rounded-bl-sm shadow-xs flex items-center gap-1.5">
+                    <div class="w-2 h-2 bg-sky-400 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-sky-400 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-sky-400 rounded-full typing-dot"></div>
+                </div>
+            `;
+            chatMessagesEl.appendChild(wrapper);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const el = document.getElementById('typing-indicator');
+            if (el) el.remove();
+        }
+
+        function scrollToBottom() {
+            chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+        }
+
+        // Gemini API 호출 (지수 백오프 포함)
+        async function callGeminiAPI(history) {
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: history,
+                systemInstruction: {
+                    parts: [{ text: SYSTEM_INSTRUCTION }]
+                },
+                generationConfig: {
+                    temperature: 0.7,
+                }
+            };
+
+            const maxRetries = 4;
+            let delay = 1000;
+
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        return candidate.content.parts[0].text;
+                    } else {
+                        throw new Error("Empty response from model");
+                    }
+                } catch (error) {
+                    if (attempt === maxRetries) {
+                        throw error;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        // 메시지 전송 처리
+        async function handleSendMessage(e) {
+            if (e) e.preventDefault();
+            if (isWaiting) return;
+
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // UI 업데이트
+            userInput.value = '';
+            appendMessage('user', text);
+            chatHistory.push({ role: 'user', parts: [{ text: text }] });
+
+            isWaiting = true;
+            sendBtn.disabled = true;
+            userInput.disabled = true;
+            showTypingIndicator();
+
+            try {
+                const replyText = await callGeminiAPI(chatHistory);
+                removeTypingIndicator();
+                chatHistory.push({ role: 'model', parts: [{ text: replyText }] });
+                processAndRenderModelMessage(replyText);
+            } catch (err) {
+                removeTypingIndicator();
+                appendMessage('model', "앗, 잠시 연결이 고르지 못했어요. 방금 한 말을 한 번 더 보내 줄래요?");
+                // 실패한 마지막 유저 메시지 제거하여 재시도 가능하게 유지
+                chatHistory.pop();
+            } finally {
+                isWaiting = false;
+                sendBtn.disabled = false;
+                userInput.disabled = false;
+                userInput.focus();
+            }
+        }
+
+        chatForm.addEventListener('submit', handleSendMessage);
+
+        // 노랫말 클립보드 복사 (document.execCommand 사용)
+        function copyLyrics() {
+            if (!currentLyrics) return;
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = currentLyrics;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast("📋 노랫말이 복사되었어요! 수노(Suno) AI에 붙여 넣어 보세요.");
+            } catch (err) {
+                showToast("❌ 복사에 실패했어요. 글자를 직접 드래그해서 복사해 주세요.");
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        // 토스트 알림 표시
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            toastMsg.textContent = msg;
+            toast.classList.remove('opacity-0');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 3000);
+        }
+
+        // 모바일 탭 전환
+        function switchMobileTab(tab) {
+            const chatSec = document.getElementById('chat-section');
+            const lyricsSec = document.getElementById('lyrics-section');
+            const tabChat = document.getElementById('tab-chat');
+            const tabLyrics = document.getElementById('tab-lyrics');
+
+            if (tab === 'chat') {
+                chatSec.classList.remove('hidden');
+                chatSec.classList.add('flex');
+                lyricsSec.classList.add('hidden');
+                lyricsSec.classList.remove('flex');
+
+                tabChat.className = "flex-1 py-2 rounded-xl font-bold text-sm bg-sky-500 text-white shadow-sm transition";
+                tabLyrics.className = "flex-1 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 transition relative";
+            } else {
+                chatSec.classList.add('hidden');
+                chatSec.classList.remove('flex');
+                lyricsSec.classList.remove('hidden');
+                lyricsSec.classList.add('flex');
+
+                tabLyrics.className = "flex-1 py-2 rounded-xl font-bold text-sm bg-amber-500 text-white shadow-sm transition relative";
+                tabChat.className = "flex-1 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 transition";
+                document.getElementById('lyrics-badge').classList.add('hidden');
+            }
+        }
+
+        // 초기화 모달 제어
+        function openResetModal() {
+            const modal = document.getElementById('reset-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeResetModal() {
+            const modal = document.getElementById('reset-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function resetApp() {
+            closeResetModal();
+            initApp();
+            showToast("🔄 처음부터 다시 시작합니다!");
+        }
+
+        // 시작 시 초기화
+        window.onload = initApp;
+    </script>
+</body>
+</html>
